@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang='en'>
+    <head>
+        <title>CSS-only browser detection</title>
+        <style>
+            .firefox-only, .ms-only, .webkit-only{
+                display: none;
+            }
+            input::-moz-range-track, .firefox-only  {
+                display: inline;
+            }
+            :-webkit-full-screen, .webkit-only {
+                display: inline;
+            }
+            input::-ms-track, .ms-only {
+                display: inline;
+            }
+            #form-container {
+                border: 1px solid #ff00ff;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>CSS-only browser detection proof of concept</h1>
+        <h2>Small demo</h2>
+        <p>Hello there. I can see you are a <span class='firefox-only'>Firefox</span>
+            <span class='webkit-only'>webkit</span><span class='ms-only'>IE/ Edge</span> User.<br/>
+            Theoretically I could find out more information about your browser and use that (with everything 
+            else I could somehow find out) to fingerprint you even with a spooved useragent and javascript disabled.<br/>
+            Try submitting the form below and check your URL.
+        </p>
+        <div id='form-container'>
+            <form class='firefox-only'>
+                <label for='firefoxTextInput'>Enter some text. Or don't; it won't do anything.</label><br/>
+                <input id='firefoxTextInput' type='text'/><br/>
+                <input name='browser' type='hidden' value='firefox' /><br/>
+                <button type='submit'>Submit and admit you're using firefox</button>
+            </form>
+            <form class='webkit-only'>
+                <label for='webkitTextInput'>Enter some text. Or don't it won't do anything.</label><br/>
+                <input id='webkitTextInput' type='text'/><br/>
+                <input name='browser' type='hidden' value='webkit' /><br/>
+                <button type='submit'>Submit and admit you're using webkit</button>
+            </form>
+            <form class='ms-only'>
+                <label for='msTextInput'>Enter some text. Or don't it won't do anything.</label><br/>
+                <input id='msTextInput' type='text'/><br/>
+                <input name='browser' type='hidden' value='ms' /><br/>
+                <button type='submit'>Submit and admit you're using IE/ Edge</button>
+            </form>
+        </div>
+        <h2>How does it work?</h2>
+        <p>
+            It's rather simple, which is why I am almost certain that someone else has built this exact proof 
+            of concept before, but I did not check before doing it because it sounded like a fun project to
+            complete in under an hour.<br/>
+            Web browsers will ignore any rule that contains a selector which they don't understand.
+            All I did was hide three forms (and spans) that look almost identical. When used maliciously, 
+            the only difference between those would be the hidden input which contains information about your 
+            browser. Then I just had to make them visible again in a rule that also contains a selector that 
+            the other browsers won't understand.
+        </p>
+        <h2>Why is this bad?</h2>
+        <p>
+            For privacy reasons, many people try to obscure which browser they are using by changing their 
+            useragent. Those people will often disable javascript as well and think they are no longer fingerprintable.
+            While it certainly is a lot harder to fingerprint those browsers, it is not impossible.
+            Combined with information about the other methods used to enhance privacy, it might be possible to end up
+            just as unique as everyone else.
+        </p>
+        <h2>Are you serious? You're only figuring out which kind of browser they are using. That's not private information.</h2>
+        <p>
+            While this is correct, please note that due to browsers constantly adding and removing features,
+            it is possible to get a far more finely grated image of what browser someone is using by applying
+            this method in a more refined way.<br/>
+            By using very specific rules it may be possible to find out which browser <b>version</b> someone is using.
+            Combine this with everything else you can scrape together and you might just have a unique identifier.<br/>
+            Safari on iOS has had a static user agent for years now -to prevent websites from knowing which
+            version it is. This means that there are people who absolutely care about not every website knowing which
+            browser version they are using.<br/>
+            Adding a bunch of almost identical forms with slightly different css rules to display them won't increase
+            a site's footprint by too much, considering the loads of NPM packages that most websites serve these days.<br/>
+
+        </p>
+    </body>
+</html>
